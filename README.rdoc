@@ -45,6 +45,14 @@ Get all contacts:
 
   gr_connection.contacts.all
 
+Get a contact by `CONTACT_ID`:
+
+  gr_connection.contacts.find(params[:CONTACT_ID])
+
+Get a contact by `email`:
+
+  gr_connection.contacts.by_email(params[:email])
+
 Create new contact:
 
   # with connection

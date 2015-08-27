@@ -23,6 +23,25 @@ module GetResponse
     end
 
 
+    # Get contact by id
+    #
+    # returns:: instance of Getresponse::Contact
+    def find(id)
+      params = {"contact" => id}
+      response = @connection.send_request("get_contact", params)
+      build_contact(response["result"])
+    end
+
+    # Get contact by name
+    #
+    # returns:: instance of Getresponse::Contact
+    def by_email(email_address)
+      params = { 'email' =>  { 'EQUALS' => email_address } }
+      response = @connection.send_request('get_contacts', params)
+      build_contact(response["result"])
+    end
+
+
     # Create new contact. Method can raise <tt>GetResponseError</tt>.
     #
     # returns:: GetResponse::Contact
@@ -85,6 +104,15 @@ module GetResponse
       raw_contacts.map do |raw_contact|
         Contact.new(raw_contact[1].merge("id" => raw_contact[0]), @connection)
       end
+    end
+
+
+    # Build <tt>Contact</tt> object from service response.
+    #
+    # @param raw_contacts [Array] of Hashes parsed from GetResponse API response
+    # @return [Array]
+    def build_contact(raw_contact)
+      Contact.new(raw_contact.values.first.merge('id' => raw_contact.keys.pop), @connection)
     end
 
   end
